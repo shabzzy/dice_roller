@@ -42,7 +42,7 @@ class _Quiz extends State<Quiz> {
     selectedAnswers.add(answers); // stores the selected answer
     if (selectedAnswers.length == questions.length) {
       setState(() {
-        // activescreen =  StartScreen(switchScreen);
+        selectedAnswers = []; // clear old answer ans start afresh
         activeScreen = 'result_screen';
       });
     }
@@ -52,10 +52,13 @@ class _Quiz extends State<Quiz> {
   Widget build(BuildContext context) {
     Widget screenWidget = StartScreen(switchScreen);
     if (activeScreen == 'question_screen') {
-      screenWidget = QuestionsScreen(switchtobackToStartScreen, answerQuestion);
+      screenWidget = QuestionsScreen(answerQuestion);
     }
     if (activeScreen == 'result_screen') {
-      screenWidget = ResultScreen();
+      screenWidget = ResultScreen(
+        switchtobackToStartScreen,
+        chosenAnswers: selectedAnswers,
+      );
     }
     return Container(
       decoration: BoxDecoration(
