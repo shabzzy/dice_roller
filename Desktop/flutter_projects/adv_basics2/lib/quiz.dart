@@ -31,10 +31,11 @@ class _Quiz extends State<Quiz> {
     });
   }
 
-  void switchtobackToStartScreen() {
+  void switchtobackQuestionScreen() {
     setState(() {
+      selectedAnswers = [];
       // activescreen =  StartScreen(switchScreen);
-      activeScreen = 'start_screen';
+      activeScreen = 'question_screen';
     });
   }
 
@@ -42,7 +43,6 @@ class _Quiz extends State<Quiz> {
     selectedAnswers.add(answers); // stores the selected answer
     if (selectedAnswers.length == questions.length) {
       setState(() {
-        selectedAnswers = []; // clear old answer ans start afresh
         activeScreen = 'result_screen';
       });
     }
@@ -56,8 +56,8 @@ class _Quiz extends State<Quiz> {
     }
     if (activeScreen == 'result_screen') {
       screenWidget = ResultScreen(
-        switchtobackToStartScreen,
-        chosenAnswers: selectedAnswers,
+        switchtobackQuestionScreen,
+        chosenAnswer: selectedAnswers,
       );
     }
     return Container(

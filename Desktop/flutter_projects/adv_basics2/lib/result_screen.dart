@@ -1,31 +1,42 @@
 import 'package:adv_basics2/data/question.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:adv_basics2/questions_summary.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen(
     this.restartQuiz, {
     super.key,
-    required this.chosenAnswers,
+    required this.chosenAnswer,
   }); //this.chosenAnsers is to access the selected answer form Quiz
   final void Function() restartQuiz;
-  final List<String> chosenAnswers;
+  final List<String> chosenAnswer;
 
   List<Map<String, Object>> getSummaryData() {
     final List<Map<String, Object>> summaryData = [];
-    for (var i = 0; i < chosenAnswers.length; i++) {
+    for (var i = 0; i < chosenAnswer.length; i++) {
       summaryData.add({
         'question_index': i,
         'question': questions[i].text,
         'correct_answer': questions[i].answers[0],
-        'user_answer': chosenAnswers[i],
+        'user_answer': chosenAnswer[i],
       });
     }
+
     return summaryData;
   }
 
   @override
   Widget build(BuildContext context) {
+    final summaryData = getSummaryData();
+    final numTotalQuestions = questions.length;
+    final numCorrectQuestion = summaryData.where((data) {
+      return data['user_answer'] == data['correct_answer'];
+    }).length;
+    if ('user_answer' == 'correct_answer') {
+      return Icon(Icons.abc_rounded);
+    }
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -34,13 +45,22 @@ class ResultScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('YOu answered x out of Y correctly!'),
+            Text(
+              textAlign: TextAlign.center,
+              style: GoogleFonts.lato(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+              'You answered $numCorrectQuestion out of $numTotalQuestions correctly!',
+            ),
             SizedBox(height: 30),
-            Text('List of answers and questions....'),
+            QuestionsSummary(summaryData),
             SizedBox(height: 30),
-            TextButton(
+            TextButton.icon(
               onPressed: restartQuiz,
-              child: Text(
+              icon: Icon(Icons.restart_alt),
+              label: Text(
                 'Restart Quiz!',
                 style: GoogleFonts.lato(
                   fontSize: 20,
